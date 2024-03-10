@@ -45,47 +45,31 @@ pub trait Algebra {
 
 /// lie algebra trait
 pub trait Adjoint {
-    /// input algebra type
-    type InPutAlgebra<const O: usize>;
-    /// output algebra type
-    type OutPutAlgebra<const O: usize>;
+    ///  dalgebra type
+    type Algebra;
     /// map algebra to another algebra
-    fn act<const O: usize>(&self, other: &Self::InPutAlgebra<O>) -> Self::OutPutAlgebra<O>;
+    fn act(&self, other: &Self::Algebra) -> Self::Algebra;
 }
 
 /// Group trait
 pub trait Group {
     /// algebra type
     type Algebra;
-
     /// log map, map group to algebra
     fn log(&self) -> Self::Algebra;
 
     /// adjoint type
     type Adjoint;
-
     /// create adjoint
     fn adjoint(&self) -> Self::Adjoint;
 
-    /// inverse group
-    type InvGroup;
     /// matrix inverse
-    fn inv(&self) -> Self::InvGroup;
-    
-    /// input group type
-    type InGroup<const O: usize>;
-    /// output group type
-    type OutGroup<const O: usize>;
-
-    /// group as a matrix
+    fn inv(&self) -> Self;
     /// matrix multiplication
-    fn mat_mul<const O: usize>(&self, other: &Self::InGroup<O>) -> Self::OutGroup<O>;
+    fn mat_mul(&self, other: &Self) -> Self;
 
-    /// input point type
-    type InPoint;
-    /// out point type
-    type OutPoint;
-    /// group as a matrix
+    /// point type
+    type Point;
     /// matrix action on point
-    fn act(&self, other: &Self::InPoint) -> Self::OutPoint;
+    fn act(&self, other: &Self::Point) -> Self::Point;
 }

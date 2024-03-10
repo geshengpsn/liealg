@@ -10,11 +10,11 @@ use nalgebra::{Matrix3, RealField, Vector3};
 /// so3 group
 #[allow(non_camel_case_types)]
 #[derive(Debug)]
-pub struct so3<T, const S: usize, const B: usize> {
+pub struct so3<T> {
     pub(crate) vector: Vector3<T>,
 }
 
-impl<T, const S: usize, const B: usize> Mul<T> for so3<T, S, B>
+impl<T> Mul<T> for so3<T>
 where
     T: Copy + RealField,
 {
@@ -27,13 +27,13 @@ where
     }
 }
 
-impl<T, const S: usize, const B: usize> Algebra for so3<T, S, B>
+impl<T> Algebra for so3<T>
 where
     T: RealField + Copy,
 {
-    type Group = SO3<T, S, B>;
+    type Group = SO3<T>;
 
-    type Vector = Vec3<T, S, B>;
+    type Vector = Vec3<T>;
 
     fn exp(&self) -> Self::Group {
         if approx_zero(self.vector.norm()) {
@@ -66,7 +66,7 @@ mod test {
 
     #[test]
     fn so3_exp() {
-        let so3 = so3::<_, 0, 1> {
+        let so3 = so3 {
             vector: Vector3::new(0., 0., FRAC_PI_2),
         };
         let rot_mat = so3.exp();
@@ -78,7 +78,7 @@ mod test {
 
     #[test]
     fn so3_vee() {
-        let so3 = so3::<f64, 0, 1> {
+        let so3 = so3 {
             vector: Vector3::new(0., 0., FRAC_PI_2),
         };
         let v = so3.vee();

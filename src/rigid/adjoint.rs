@@ -6,19 +6,17 @@ use super::se3;
 
 /// Adjoint of SE3
 #[derive(Debug)]
-pub struct AdjSE3<T, const S: usize, const B: usize> {
+pub struct AdjSE3<T> {
     pub(crate) val: Matrix6<T>,
 }
 
-impl<T, const S: usize, const B: usize> Adjoint for AdjSE3<T, S, B>
+impl<T> Adjoint for AdjSE3<T>
 where
-    T: RealField + Copy,
+    T: Copy + RealField,
 {
-    type InPutAlgebra<const O: usize> = se3<T, B, O>;
+    type Algebra = se3<T>;
 
-    type OutPutAlgebra<const O: usize> = se3<T, S, O>;
-
-    fn act<const O: usize>(&self, other: &Self::InPutAlgebra<O>) -> Self::OutPutAlgebra<O> {
+    fn act(&self, other: &Self::Algebra) -> Self::Algebra {
         se3 {
             val: self.val * other.val,
         }
@@ -31,8 +29,8 @@ mod test {
 
     #[test]
     fn test_new() {
-        let adj = AdjSE3::<f64, 0, 1> {
-            val: Matrix6::identity(),
+        let adj = AdjSE3 {
+            val: Matrix6::<f64>::identity(),
         };
         assert_eq!(adj.val, Matrix6::identity());
     }

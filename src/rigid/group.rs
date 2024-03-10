@@ -9,11 +9,11 @@ use super::{se3, AdjSE3};
 
 /// SE3 group, rotation and translation in 3D space
 #[derive(Debug)]
-pub struct SE3<T, const S: usize, const B: usize> {
+pub struct SE3<T> {
     pub(crate) val: Matrix4<T>,
 }
 
-impl<T, const S: usize, const B: usize> SE3<T, S, B>
+impl<T> SE3<T>
 where
     T: RealField,
 {
@@ -31,15 +31,15 @@ where
     }
 }
 
-impl<T, const S: usize, const B: usize> Group for SE3<T, S, B>
+impl<T> Group for SE3<T>
 where
     T: Copy + RealField,
 {
-    type Algebra = se3<T, S, B>;
+    type Algebra = se3<T>;
 
     fn log(&self) -> Self::Algebra {
         let (r, p) = self.rp();
-        let w = SO3::<_, S, B> { val: r }.log().vector;
+        let w = SO3 { val: r }.log().vector;
 
         if approx_zero_vec(&w) {
             let mut res = Vector6::zeros();
@@ -63,7 +63,7 @@ where
         }
     }
 
-    type Adjoint = AdjSE3<T, S, B>;
+    type Adjoint = AdjSE3<T>;
 
     fn adjoint(&self) -> Self::Adjoint {
         let (r, p) = self.rp();
@@ -75,28 +75,20 @@ where
         Self::Adjoint { val: res }
     }
 
-    type InvGroup = SE3<T, B, S>;
-
-    fn inv(&self) -> Self::InvGroup {
+    fn inv(&self) -> Self {
         let (r, p) = self.rp();
-        Self::InvGroup::from_rp(&r.transpose(), &(-r.transpose() * p))
+        Self::from_rp(&r.transpose(), &(-r.transpose() * p))
     }
 
-    type InGroup<const O: usize> = SE3<T, B, O>;
-
-    type OutGroup<const O: usize> = SE3<T, S, O>;
-
-    fn mat_mul<const O: usize>(&self, other: &Self::InGroup<O>) -> Self::OutGroup<O> {
+    fn mat_mul(&self, other: &Self) -> Self {
         SE3 {
             val: self.val * other.val,
         }
     }
 
-    type InPoint = Point<T, B>;
+    type Point = Point<T>;
 
-    type OutPoint = Point<T, B>;
-
-    fn act(&self, other: &Self::InPoint) -> Self::OutPoint {
+    fn act(&self, other: &Self::Point) -> Self::Point {
         let p4 = self.val * Vector4::new(other.val.x, other.val.y, other.val.z, T::one());
         Point {
             val: Vector3::new(p4.x, p4.y, p4.z),
@@ -116,7 +108,7 @@ mod test {
 
     #[test]
     fn test_new() {
-        let se3 = SE3::<f64, 0, 1> {
+        let se3 = SE3::<f64> {
             val: Matrix4::identity(),
         };
         assert_eq!(se3.val, Matrix4::identity());
@@ -124,7 +116,7 @@ mod test {
 
     #[test]
     fn test_rp() {
-        let se3 = SE3::<f64, 0, 1> {
+        let se3 = SE3 {
             val: Matrix4::new(
                 1., 0., 0., 1., 0., 1., 0., 2., 0., 0., 1., 3., 0., 0., 0., 1.,
             ),
@@ -136,7 +128,7 @@ mod test {
 
     #[test]
     fn test_from_rp() {
-        let se3 = SE3::<f64, 0, 1>::from_rp(
+        let se3 = SE3::from_rp(
             &Matrix3::new(1., 0., 0., 0., 1., 0., 0., 0., 1.),
             &Vector3::new(1., 2., 3.),
         );
@@ -148,7 +140,7 @@ mod test {
 
     #[test]
     fn test_log() {
-        let se3 = SE3::<f64, 0, 1>::from_rp(
+        let se3 = SE3::from_rp(
             &Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
             &Vector3::new(1., 1., 0.),
         )
@@ -159,7 +151,7 @@ mod test {
 
     #[test]
     fn test_adjoint() {
-        let se3 = SE3::<f64, 0, 1>::from_rp(
+        let se3 = SE3::from_rp(
             &Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
             &Vector3::new(1., 1., 0.),
         )
@@ -175,7 +167,7 @@ mod test {
 
     #[test]
     fn test_inv() {
-        let se3 = SE3::<f64, 0, 1>::from_rp(
+        let se3 = SE3::from_rp(
             &Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
             &Vector3::new(1., 1., 0.),
         );

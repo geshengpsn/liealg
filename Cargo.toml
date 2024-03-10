@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2021"
 description = "lie group and lie algebra in rust"
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/geshengpsn/liealg"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-nalgebra = "0.32"
+nalgebra = "0.32.4"
 
 [dev-dependencies]
-approx = "0.5"
+approx = "0.5.1"

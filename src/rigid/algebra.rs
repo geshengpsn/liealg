@@ -13,11 +13,11 @@ use super::{Vec6, SE3};
 /// se3 group
 #[derive(Debug)]
 #[allow(non_camel_case_types)]
-pub struct se3<T, const S: usize, const B: usize> {
+pub struct se3<T> {
     pub(crate) val: Vector6<T>,
 }
 
-impl<T, const S: usize, const B: usize> Mul<T> for se3<T, S, B>
+impl<T> Mul<T> for se3<T>
 where
     T: Copy + RealField,
 {
@@ -30,12 +30,12 @@ where
     }
 }
 
-impl<T, const S: usize, const B: usize> Algebra for se3<T, S, B>
+impl<T> Algebra for se3<T>
 where
     T: Copy + RealField,
 {
-    type Group = SE3<T, S, B>;
-    type Vector = Vec6<T, S, B>;
+    type Group = SE3<T>;
+    type Vector = Vec6<T>;
 
     fn exp(&self) -> Self::Group {
         let vec = self.vee();
@@ -45,23 +45,23 @@ where
         if approx_zero(theta) {
             let mut res = Matrix4::identity();
             res.view_mut((0, 3), (3, 1)).copy_from(&v);
-            SE3::<T, S, B> { val: res }
+            SE3 { val: res }
         } else {
             let mut res = Matrix4::identity();
             let w_so3 = hat(&axis);
             let vv = Matrix3::identity() * theta
                 + w_so3 * (T::one() - theta.cos())
                 + w_so3 * w_so3 * (theta - theta.sin());
-            let rot = so3::<T, S, B> { vector: w }.exp();
+            let rot = so3 { vector: w }.exp();
             let rot = rot.val;
             res.view_mut((0, 0), (3, 3)).copy_from(&rot);
             res.view_mut((0, 3), (3, 1)).copy_from(&(vv * v / theta));
-            SE3::<T, S, B> { val: res }
+            SE3 { val: res }
         }
     }
 
     fn vee(&self) -> Self::Vector {
-        Vec6::<_, S, B> { val: self.val }
+        Vec6::<_> { val: self.val }
     }
 }
 
@@ -83,10 +83,10 @@ mod test {
         // x ---+
         //       \
         //        y
-        let se3 = Vec6::<_, 0, 1>::new([0., 0., 1.], [1., 0., 0.]).hat() * FRAC_PI_2;
+        let se3 = Vec6::new([0., 0., 1.], [1., 0., 0.]).hat() * FRAC_PI_2;
         let v = se3.exp();
 
-        let s = SE3::<f64, 0, 1> {
+        let s = SE3 {
             val: Matrix4::new(
                 0., -1., 0., 1., 1., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 1.,
             ),

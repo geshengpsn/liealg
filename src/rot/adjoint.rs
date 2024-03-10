@@ -8,18 +8,17 @@ use super::Vec3;
 
 /// Adjoint of SO3
 #[derive(Debug)]
-pub struct AdjSO3<T, const S: usize, const B: usize> {
+pub struct AdjSO3<T> {
     pub(crate) val: Matrix3<T>,
 }
 
-impl<T, const S: usize, const B: usize> Adjoint for AdjSO3<T, S, B>
+impl<T> Adjoint for AdjSO3<T>
 where
     T: Copy + RealField,
 {
-    type InPutAlgebra<const O: usize> = so3<T, B, O>;
-    type OutPutAlgebra<const O: usize> = so3<T, S, O>;
+    type Algebra = so3<T>;
 
-    fn act<const O: usize>(&self, other: &Self::InPutAlgebra<O>) -> Self::OutPutAlgebra<O> {
+    fn act(&self, other: &Self::Algebra) -> Self::Algebra {
         Vec3 {
             vector: self.val * other.vector,
         }
@@ -35,10 +34,10 @@ mod test {
 
     #[test]
     fn test_adjoint() {
-        let adj = AdjSO3::<f64, 0, 1>{
+        let adj = AdjSO3::<f64>{
             val: Matrix3::identity()
         };
-        let _ = adj.act(&so3::<f64, 1, 2> {
+        let _ = adj.act(&so3 {
             vector: Vector3::new(1., 2., 3.),
         });
     }

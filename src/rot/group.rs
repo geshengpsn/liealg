@@ -6,34 +6,15 @@ use super::{so3, AdjSO3};
 
 /// SO3 group (rotation matrix), rotation in 3D space
 #[derive(Debug)]
-pub struct SO3<T, const S: usize, const B: usize> {
+pub struct SO3<T> {
     pub(crate) val: Matrix3<T>,
 }
 
-impl<T, const S: usize, const B: usize> SO3<T, S, B>
-where
-    T: RealField,
-{
-    // pub fn identity() -> Self {
-    //     Self {
-    //         val: Matrix3::<T>::identity(),
-    //     }
-    // }
-
-    // pub fn from_mat(matrix: Matrix3<T>) -> Self {
-    //     Self { matrix }
-    // }
-
-    // pub(crate) fn raw(&self) -> &Matrix3<T> {
-    //     &self.val
-    // }
-}
-
-impl<T, const S: usize, const B: usize> Group for SO3<T, S, B>
+impl<T> Group for SO3<T>
 where
     T: RealField + Copy,
 {
-    type Algebra = so3<T, S, B>;
+    type Algebra = so3<T>;
 
     fn log(&self) -> Self::Algebra {
         fn approx_zero<T: RealField>(v: T) -> bool {
@@ -72,33 +53,27 @@ where
         }
     }
 
-    type Adjoint = AdjSO3<T, S, B>;
+    type Adjoint = AdjSO3<T>;
 
     fn adjoint(&self) -> Self::Adjoint {
         AdjSO3 { val: self.val }
     }
 
-    type InvGroup = SO3<T, B, S>;
-
-    fn inv(&self) -> Self::InvGroup {
-        Self::InvGroup {
+    fn inv(&self) -> Self {
+        Self {
             val: self.val.transpose(),
         }
     }
 
-    type InGroup<const O: usize> = SO3<T, B, O>;
-    type OutGroup<const O: usize> = SO3<T, S, O>;
-
-    fn mat_mul<const O: usize>(&self, other: &Self::InGroup<O>) -> Self::OutGroup<O> {
-        Self::OutGroup {
+    fn mat_mul(&self, other: &Self) -> Self {
+        Self {
             val: self.val * other.val,
         }
     }
 
-    type InPoint = Point<T, B>;
-    type OutPoint = Point<T, S>;
-    fn act(&self, other: &Self::InPoint) -> Self::OutPoint {
-        Self::OutPoint {
+    type Point = Point<T>;
+    fn act(&self, other: &Self::Point) -> Self::Point {
+        Self::Point {
             val: self.val * other.val,
         }
     }
@@ -116,11 +91,11 @@ mod test {
 
     #[test]
     fn test_log() {
-        let rot = SO3::<f64, 0, 1> {
+        let rot = SO3 {
             val: Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
         };
         let so3 = rot.log();
-        let v = Vec3::<_, 0, 1> {
+        let v = Vec3 {
             vector: Vector3::new(0., 0., FRAC_PI_2),
         };
         assert_relative_eq!(v.hat().vector, so3.vector);
@@ -128,7 +103,7 @@ mod test {
 
     #[test]
     fn test_adjoint() {
-        let rot = SO3::<f64, 0, 1> {
+        let rot = SO3 {
             val: Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
         };
         let adj = rot.adjoint();
@@ -137,7 +112,7 @@ mod test {
 
     #[test]
     fn test_inv() {
-        let rot = SO3::<f64, 0, 1> {
+        let rot = SO3 {
             val: Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
         };
         let inv = rot.inv();
@@ -146,22 +121,19 @@ mod test {
 
     #[test]
     fn test_mat_mul() {
-        let rot1 = SO3::<f64, 0, 1> {
+        let rot1 = SO3 {
             val: Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
         };
-        let rot2 = SO3::<f64, 1, 2> {
+        let rot2 = SO3 {
             val: Matrix3::identity(),
         };
         let rot3 = rot1.mat_mul(&rot2);
-        assert_relative_eq!(
-            rot3.val,
-            &Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.)
-        );
+        assert_relative_eq!(rot3.val, &Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.));
     }
 
     #[test]
     fn test_act() {
-        let rot = SO3::<f64, 0, 1>{
+        let rot = SO3 {
             val: Matrix3::new(0., -1., 0., 1., 0., 0., 0., 0., 1.),
         };
         let v = Point {

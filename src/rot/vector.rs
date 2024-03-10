@@ -6,15 +6,15 @@ use super::so3;
 
 /// so3 vector representation
 #[derive(Debug)]
-pub struct Vec3<T, const S: usize, const B: usize> {
+pub struct Vec3<T> {
     pub(crate) vector: Vector3<T>,
 }
 
-impl<T, const S: usize, const B: usize> Vector for Vec3<T, S, B>
+impl<T> Vector for Vec3<T>
 where
     T: Copy,
 {
-    type Algebra = so3<T, S, B>;
+    type Algebra = so3<T>;
 
     fn hat(&self) -> Self::Algebra {
         so3 {
@@ -32,7 +32,7 @@ mod test {
     use super::*;
     #[test]
     fn vector_hat() {
-        let v = Vec3::<f64, 0, 1> {
+        let v = Vec3 {
             vector: Vector3::new(0., 0., FRAC_PI_2),
         };
         let so3 = v.hat();
