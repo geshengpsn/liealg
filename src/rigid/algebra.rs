@@ -1,0 +1,96 @@
+use core::ops::Mul;
+
+use nalgebra::{Matrix3, Matrix4, RealField, Vector6};
+
+use crate::{
+    so3,
+    utils::{approx_zero, axis_angle, hat},
+    Algebra,
+};
+
+use super::{Vec6, SE3};
+
+/// se3 group
+#[derive(Debug)]
+#[allow(non_camel_case_types)]
+pub struct se3<T, const S: usize, const B: usize> {
+    pub(crate) val: Vector6<T>,
+}
+
+impl<T, const S: usize, const B: usize> Mul<T> for se3<T, S, B>
+where
+    T: Copy + RealField,
+{
+    type Output = Self;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Self {
+            val: self.val * rhs,
+        }
+    }
+}
+
+impl<T, const S: usize, const B: usize> Algebra for se3<T, S, B>
+where
+    T: Copy + RealField,
+{
+    type Group = SE3<T, S, B>;
+    type Vector = Vec6<T, S, B>;
+
+    fn exp(&self) -> Self::Group {
+        let vec = self.vee();
+        let v = vec.p();
+        let w = vec.r();
+        let (axis, theta) = axis_angle(&w);
+        if approx_zero(theta) {
+            let mut res = Matrix4::identity();
+            res.view_mut((0, 3), (3, 1)).copy_from(&v);
+            SE3::<T, S, B> { val: res }
+        } else {
+            let mut res = Matrix4::identity();
+            let w_so3 = hat(&axis);
+            let vv = Matrix3::identity() * theta
+                + w_so3 * (T::one() - theta.cos())
+                + w_so3 * w_so3 * (theta - theta.sin());
+            let rot = so3::<T, S, B> { vector: w }.exp();
+            let rot = rot.val;
+            res.view_mut((0, 0), (3, 3)).copy_from(&rot);
+            res.view_mut((0, 3), (3, 1)).copy_from(&(vv * v / theta));
+            SE3::<T, S, B> { val: res }
+        }
+    }
+
+    fn vee(&self) -> Self::Vector {
+        Vec6::<_, S, B> { val: self.val }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use core::f64::consts::FRAC_PI_2;
+
+    use approx::assert_relative_eq;
+    use nalgebra::Matrix4;
+
+    use crate::{rigid::Vec6, Vector};
+
+    use super::*;
+
+    #[test]
+    fn se3_exp() {
+        //      | z
+        //      |
+        // x ---+
+        //       \
+        //        y
+        let se3 = Vec6::<_, 0, 1>::new([0., 0., 1.], [1., 0., 0.]).hat() * FRAC_PI_2;
+        let v = se3.exp();
+
+        let s = SE3::<f64, 0, 1> {
+            val: Matrix4::new(
+                0., -1., 0., 1., 1., 0., 0., 1., 0., 0., 1., 0., 0., 0., 0., 1.,
+            ),
+        };
+        assert_relative_eq!(v.val, s.val);
+    }
+}
