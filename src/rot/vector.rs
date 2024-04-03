@@ -1,4 +1,4 @@
-use core::fmt::{Display, Formatter};
+use core::{fmt::{Display, Formatter}, ops::Mul};
 
 use nalgebra::Vector3;
 
@@ -21,6 +21,19 @@ where
 {
     fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
         self.val.fmt(f)
+    }
+}
+
+impl<T> Mul<T> for Vec3<T>
+where
+    T: Real,
+{
+    type Output = Self;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Self {
+            val: self.val * rhs,
+        }
     }
 }
 
