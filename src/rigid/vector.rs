@@ -1,8 +1,8 @@
 use core::ops::Mul;
 
-use nalgebra::{RealField, Vector3, Vector6};
+use nalgebra::{Vector3, Vector6};
 
-use crate::Vector;
+use crate::{Real, Vector};
 
 use super::se3;
 
@@ -14,7 +14,7 @@ pub struct Vec6<T> {
 
 impl<T> Mul<T> for Vec6<T>
 where
-    T: Copy + RealField,
+    T: Real,
 {
     type Output = Self;
 

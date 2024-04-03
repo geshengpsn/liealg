@@ -11,10 +11,30 @@ use crate::{
 use super::{Vec6, SE3};
 
 /// se3 group
+/// ```
+/// se3 = [
+///  0 -wz wy x
+///  wz 0 -wx y
+/// -wy wx 0  z
+///  0  0  0  0
+/// ]
+/// ```
 #[derive(Debug)]
 #[allow(non_camel_case_types)]
 pub struct se3<T> {
     pub(crate) val: Vector6<T>,
+}
+
+impl<T> se3<T>
+where
+    T: Real,
+{
+    /// Create a new se3 from rotation and translation
+    pub fn new(r: [T; 3], p: [T; 3]) -> Self {
+        Self {
+            val: Vector6::new(r[0], r[1], r[2], p[0], p[1], p[2]),
+        }
+    }
 }
 
 impl<T> Mul<T> for se3<T>
