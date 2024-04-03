@@ -1,14 +1,17 @@
 [package]
 name = "liealg"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 description = "lie group and lie algebra in rust"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/geshengpsn/liealg"
+readme = "readme.md"
+documentation = "https://docs.rs/liealg"
+keywords = ["lie group", "lie algebra", "math", "algebra", "robotics"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-nalgebra = "0.32.4"
+nalgebra = "0.32.5"
 num-traits = "0.2.18"
 
 [dev-dependencies]
