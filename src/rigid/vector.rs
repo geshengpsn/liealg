@@ -1,4 +1,4 @@
-use core::ops::Mul;
+use core::{fmt::{self, Display, Formatter}, ops::Mul};
 
 use nalgebra::{Vector3, Vector6};
 
@@ -10,6 +10,15 @@ use super::se3;
 #[derive(Debug)]
 pub struct Vec6<T> {
     pub(crate) val: Vector6<T>,
+}
+
+impl<T> Display for Vec6<T>
+where
+    T: Real + Display,
+{
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        self.val.fmt(f)
+    }
 }
 
 impl<T> Mul<T> for Vec6<T>

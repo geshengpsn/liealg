@@ -1,3 +1,5 @@
+use core::fmt::Display;
+
 use nalgebra::{Matrix3, Matrix4, Matrix6, Vector3, Vector4, Vector6};
 
 use crate::{
@@ -18,6 +20,15 @@ use super::{se3, AdjSE3};
 #[derive(Debug)]
 pub struct SE3<T> {
     pub(crate) val: Matrix4<T>,
+}
+
+impl<T> Display for SE3<T>
+where
+    T: Display + Real,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.val.fmt(f)
+    }
 }
 
 impl<T> SE3<T>
@@ -62,7 +73,7 @@ where
 
     fn log(&self) -> Self::Algebra {
         let (r, p) = self.rp();
-        let w = SO3 { val: r }.log().vector;
+        let w = SO3 { val: r }.log().val;
 
         if approx_zero_vec(&w) {
             let mut res = Vector6::zeros();
