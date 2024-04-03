@@ -18,8 +18,8 @@
 //!
 //! |group|algebra|vector|
 //! |-|-|-|
-//! |SO3|so3|Vector3|
-//! |SE3|se3|Vector6|
+//! |SO3|so3|Vec3|
+//! |SE3|se3|Vec6|
 //!
 //! ## Usage
 //! add liealg to your dependencies
@@ -31,6 +31,23 @@
 //! import prelude module
 //! ```rust
 //! use liealg::prelude::*;
+//! ```
+//! Rotation
+//! ```ignore
+//! Vec3 ---> so3 ---> SO3 -------> AdjSO3
+//!      hat      exp      adjoint
+//!
+//! Vec3 <--- so3 <--- SO3
+//!       vee      log
+//! ```
+//!
+//! Rigid body motion
+//! ```ignore
+//! Vec6 ---> se3 ---> SE3 -------> AdjSE3
+//!      hat      exp      adjoint
+//!
+//! Vec6 <--- se3 <--- SE3
+//!       vee      log
 //! ```
 //!  
 //! ## Example
