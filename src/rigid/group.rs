@@ -10,7 +10,7 @@ use super::{se3, AdjSE3};
 /// SE3 group, rotation and translation in 3D space
 ///
 /// SE3 is a 4x4 matrix
-/// ```
+/// ```ignore
 /// SE3 = [
 ///  R t
 ///  0 1

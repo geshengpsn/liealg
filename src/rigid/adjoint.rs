@@ -9,7 +9,7 @@ use super::se3;
 /// Adjoint of SE3
 /// 
 /// AdjSE3 is a 6x6 matrix
-/// ```
+/// ```ignore
 /// AdjSE3 = [
 ///   R 0
 ///  tR R

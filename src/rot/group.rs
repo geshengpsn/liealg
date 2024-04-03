@@ -5,7 +5,7 @@ use crate::{point::Point, utils::approx_zero, Group, Real};
 use super::{so3, AdjSO3};
 
 /// SO3 group (rotation matrix), rotation in 3D space
-/// ```
+/// ```ignore
 /// SO3 = [
 ///   r11 r12 r13
 ///   r21 r22 r23
@@ -34,8 +34,8 @@ where
     /// 
     /// ## Example
     /// ```rust
-    /// use lie::rot::SO3;
-    /// let rot = SO3::from_euler_angles(f64::consts::PI/4.0, 0., 0.);
+    /// use liealg::rot::SO3;
+    /// let rot = SO3::from_euler_angles(std::f64::consts::PI/4.0, 0., 0.);
     /// ```
     pub fn from_euler_angles(roll: T, pitch: T, yaw: T) -> Self {
         let (sr, cr) = roll.sin_cos();

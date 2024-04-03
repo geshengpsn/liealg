@@ -5,7 +5,7 @@ use crate::Vector;
 use super::so3;
 
 /// so3 vector representation
-/// ```
+/// ```ignore
 /// vec3 = [x, y, z]
 /// ```
 #[derive(Debug)]
@@ -16,7 +16,7 @@ pub struct Vec3<T> {
 impl<T> Vec3<T>
 {
     /// Create a new Vec3
-    /// ```
+    /// ```ignore
     /// vec3 = [x, y, z]
     /// ```
     pub fn new(x: T, y: T, z: T) -> Self {
