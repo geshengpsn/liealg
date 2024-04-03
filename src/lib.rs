@@ -27,7 +27,7 @@
 //! [dependencies]
 //! liealg = "0.1"
 //! ```
-//! 
+//!
 //! import prelude module
 //! ```rust
 //! use liealg::prelude::*;
@@ -49,7 +49,7 @@
 //! let vec_ = so3_.vee();
 //! println!("vec_: {}", vec_);
 //! ```
-//! 
+//!
 //! ### Rigid body motion
 //!
 //! ```rust
@@ -66,7 +66,7 @@
 //! let vec_ = se3_.vee();
 //! println!("vec_: {}", vec_);
 //! ```
-//! 
+//!
 
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
