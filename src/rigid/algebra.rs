@@ -1,11 +1,11 @@
 use core::ops::Mul;
 
-use nalgebra::{Matrix3, Matrix4, RealField, Vector6};
+use nalgebra::{Matrix3, Matrix4, Vector6};
 
 use crate::{
     so3,
     utils::{approx_zero, axis_angle, hat},
-    Algebra,
+    Algebra, Real,
 };
 
 use super::{Vec6, SE3};
@@ -19,7 +19,7 @@ pub struct se3<T> {
 
 impl<T> Mul<T> for se3<T>
 where
-    T: Copy + RealField,
+    T: Real,
 {
     type Output = Self;
 
@@ -32,7 +32,7 @@ where
 
 impl<T> Algebra for se3<T>
 where
-    T: Copy + RealField,
+    T: Real,
 {
     type Group = SE3<T>;
     type Vector = Vec6<T>;

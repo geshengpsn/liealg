@@ -1,8 +1,8 @@
-use nalgebra::{Matrix3, Matrix4, Matrix6, RealField, Vector3, Vector4, Vector6};
+use nalgebra::{Matrix3, Matrix4, Matrix6, Vector3, Vector4, Vector6};
 
 use crate::{
     utils::{approx_zero_vec, axis_angle, hat},
-    Group, Point, SO3,
+    Group, Point, Real, SO3,
 };
 
 use super::{se3, AdjSE3};
@@ -15,7 +15,7 @@ pub struct SE3<T> {
 
 impl<T> SE3<T>
 where
-    T: RealField,
+    T: Real,
 {
     fn rp(&self) -> (Matrix3<T>, Vector3<T>) {
         let r = self.val.fixed_view::<3, 3>(0, 0);
@@ -33,7 +33,7 @@ where
 
 impl<T> Group for SE3<T>
 where
-    T: Copy + RealField,
+    T: Copy + Real,
 {
     type Algebra = se3<T>;
 

@@ -2,10 +2,10 @@ use core::ops::Mul;
 
 use super::SO3;
 use crate::{
-    utils::{approx_zero, axis_angle, hat},
-    Algebra, Vec3,
+    utils::{approx_zero, axis_angle, hat, length},
+    Algebra, Real, Vec3,
 };
-use nalgebra::{Matrix3, RealField, Vector3};
+use nalgebra::{Matrix3, Vector3};
 
 /// so3 group
 #[allow(non_camel_case_types)]
@@ -16,7 +16,7 @@ pub struct so3<T> {
 
 impl<T> Mul<T> for so3<T>
 where
-    T: Copy + RealField,
+    T: Copy + Real,
 {
     type Output = Self;
 
@@ -29,14 +29,14 @@ where
 
 impl<T> Algebra for so3<T>
 where
-    T: RealField + Copy,
+    T: Real + Copy,
 {
     type Group = SO3<T>;
 
     type Vector = Vec3<T>;
 
     fn exp(&self) -> Self::Group {
-        if approx_zero(self.vector.norm()) {
+        if approx_zero(length(&self.vector)) {
             SO3 {
                 val: Matrix3::identity(),
             }

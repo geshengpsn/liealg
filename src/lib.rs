@@ -7,7 +7,6 @@
 
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
-#![deny(missing_copy_implementations)]
 #![no_std]
 
 mod point;
@@ -15,9 +14,33 @@ mod rigid;
 mod rot;
 mod utils;
 
+use core::fmt::Debug;
+
+use num_traits::{real::Real as NumReal, FloatConst, NumAssignOps};
 pub use point::Point;
-pub use rot::{so3, AdjSO3, Vec3, SO3};
 pub use rigid::{se3, AdjSE3, Vec6, SE3};
+pub use rot::{so3, AdjSO3, Vec3, SO3};
+
+/// prelude module
+pub mod prelude {
+    pub use crate::{Adjoint, Algebra, Group, Real, Vector};
+}
+/// # real number trait
+/// support ops: +, -, *, /, %, +=, -=, *=, /=, %=
+///
+/// consts: 0, 1, π, 1/π, ln2, ......
+///
+/// compare ops: >, <, <=, >=
+pub trait Real: NumReal + Debug + NumAssignOps + FloatConst + 'static {}
+
+impl<T> Real for T where T: NumReal + Debug + NumAssignOps + FloatConst + 'static {}
+
+#[test]
+fn trait_test() {
+    fn a<T: Real>(_: T) {}
+    a(1f64);
+    a(1f32);
+}
 
 /// lie algebra vector representation
 pub trait Vector {

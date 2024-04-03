@@ -1,6 +1,6 @@
-use nalgebra::{Matrix3, RealField, Vector3};
+use nalgebra::{Matrix3, Vector3};
 
-use crate::{point::Point, Group};
+use crate::{point::Point, utils::approx_zero, Group, Real};
 
 use super::{so3, AdjSO3};
 
@@ -12,15 +12,11 @@ pub struct SO3<T> {
 
 impl<T> Group for SO3<T>
 where
-    T: RealField + Copy,
+    T: Real + Copy,
 {
     type Algebra = so3<T>;
 
     fn log(&self) -> Self::Algebra {
-        fn approx_zero<T: RealField>(v: T) -> bool {
-            v < T::default_epsilon()
-        }
-
         let rot = self.val;
         let one: T = T::one();
         let two = one + one;
@@ -42,7 +38,7 @@ where
                     / (two * (one + rot[(0, 0)])).sqrt();
             }
             so3 {
-                vector: res * T::pi(),
+                vector: res * T::PI(),
             }
         } else {
             let theta = cos.acos();

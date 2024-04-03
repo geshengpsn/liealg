@@ -1,4 +1,7 @@
-use liealg::*;
+use liealg::prelude::*;
+use liealg::{se3, Vec6};
+
+fn a<T: Real>(a: se3<T>) {}
 
 fn main() {
     let r = [0.0, 0.0, 1.0];

@@ -1,6 +1,8 @@
-use nalgebra::{Matrix6, RealField};
+use core::fmt::Debug;
 
-use crate::Adjoint;
+use nalgebra::Matrix6;
+
+use crate::{Adjoint, Real};
 
 use super::se3;
 
@@ -12,7 +14,7 @@ pub struct AdjSE3<T> {
 
 impl<T> Adjoint for AdjSE3<T>
 where
-    T: Copy + RealField,
+    T: Real,
 {
     type Algebra = se3<T>;
 
