@@ -1,3 +1,5 @@
+use core::fmt::Display;
+
 use nalgebra::{Matrix3, Matrix4, Matrix6, Vector3, Vector4, Vector6};
 
 use crate::{
@@ -8,9 +10,41 @@ use crate::{
 use super::{se3, AdjSE3};
 
 /// SE3 group, rotation and translation in 3D space
+///
+/// SE3 is a 4x4 matrix
+/// ```ignore
+/// SE3 = [
+///  R t
+///  0 1
+/// ]
 #[derive(Debug)]
 pub struct SE3<T> {
     pub(crate) val: Matrix4<T>,
+}
+
+impl<T> Display for SE3<T>
+where
+    T: Display + Real,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.val.fmt(f)
+    }
+}
+
+impl<T> SE3<T>
+where
+    T: Real,
+{
+    /// Create a new SE3 from a SO3 and translation
+    pub fn new(rot: &SO3<T>, p: [T; 3]) -> Self {
+        Self::from_rp(&rot.val, &Vector3::from(p))
+    }
+
+    /// create SO3 and translation from SE3
+    pub fn rot_trans(&self) -> (SO3<T>, [T; 3]) {
+        let (r, p) = self.rp();
+        (SO3 { val: r }, p.into())
+    }
 }
 
 impl<T> SE3<T>
@@ -33,13 +67,13 @@ where
 
 impl<T> Group for SE3<T>
 where
-    T: Copy + Real,
+    T: Real,
 {
     type Algebra = se3<T>;
 
     fn log(&self) -> Self::Algebra {
         let (r, p) = self.rp();
-        let w = SO3 { val: r }.log().vector;
+        let w = SO3 { val: r }.log().val;
 
         if approx_zero_vec(&w) {
             let mut res = Vector6::zeros();

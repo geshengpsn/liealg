@@ -1,8 +1,11 @@
-use core::ops::Mul;
+use core::{
+    fmt::{self, Display, Formatter},
+    ops::Mul,
+};
 
-use nalgebra::{RealField, Vector3, Vector6};
+use nalgebra::{Vector3, Vector6};
 
-use crate::Vector;
+use crate::{Real, Vector};
 
 use super::se3;
 
@@ -12,9 +15,18 @@ pub struct Vec6<T> {
     pub(crate) val: Vector6<T>,
 }
 
+impl<T> Display for Vec6<T>
+where
+    T: Real + Display,
+{
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        self.val.fmt(f)
+    }
+}
+
 impl<T> Mul<T> for Vec6<T>
 where
-    T: Copy + RealField,
+    T: Real,
 {
     type Output = Self;
 

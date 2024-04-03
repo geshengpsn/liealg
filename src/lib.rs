@@ -1,17 +1,97 @@
-//! # Lie group and Lie algebra
+//! # Lie group and Lie algebra in rust
 //!
-//! |manifold|algebra|vector|
+//! liealg is a library for computing Lie algebra and Lie group in 3D space(SO3 and SE3).
+//! It is mainly used in robot kinematics and other related area.
+//! If you want to do some general Lie group and Lie algebra calculations,
+//! it is better not to use this library.
+//!
+//! ## Traits
+//! liealg provides a set of mathematical entity traits for Lie group and Lie algebra.
+//! these are [Adjoint], [Algebra], [Group], [Vector].
+//! liealg provides a standard implementation of these traits, but users can also implement their own types.
+//!
+//! liealg also provides a trait [Real] for using more types of real numbers, except f32, f64, it can support most real number types, such as rational and decimal, users can also define their own real number types.
+//!
+//! ## Implementations
+//!
+//! liealg provides two implementations of Lie group and Lie algebra, SO3 and SE3, which correspond to rotation and rigid body motion in 3D space.
+//!
+//! |group|algebra|vector|
 //! |-|-|-|
-//! |SO3|so3|Vector3|
-//! |SE3|se3|Vector6|
+//! |SO3|so3|Vec3|
+//! |SE3|se3|Vec6|
+//!
+//! ## Usage
+//! add liealg to your dependencies
+//! ```toml
+//! [dependencies]
+//! liealg = "0.1"
+//! ```
+//!
+//! import prelude module
+//! ```rust
+//! use liealg::prelude::*;
+//! ```
+//! Rotation
+//! ```ignore
+//! Vec3 ---> so3 ---> SO3 -------> AdjSO3
+//!      hat      exp      adjoint
+//!
+//! Vec3 <--- so3 <--- SO3
+//!       vee      log
+//! ```
+//!
+//! Rigid body motion
+//! ```ignore
+//! Vec6 ---> se3 ---> SE3 -------> AdjSE3
+//!      hat      exp      adjoint
+//!
+//! Vec6 <--- se3 <--- SE3
+//!       vee      log
+//! ```
+//!  
+//! ## Example
+//! ### Rotation
+//! ```rust
+//! use std::f32::consts::FRAC_PI_2;
+//! use liealg::prelude::*;
+//! use liealg::Vec3;
+//! let vec = Vec3::new(0., 0., FRAC_PI_2);
+//! println!("vec: {}", vec);
+//! let so3 = vec.hat();
+//! println!("so3: {}", so3);
+//! let rot = so3.exp();
+//! println!("rot: {:.2}", rot);
+//! let so3_ = rot.log();
+//! let vec_ = so3_.vee();
+//! println!("vec_: {}", vec_);
+//! ```
+//!
+//! ### Rigid body motion
+//!
+//! ```rust
+//! use std::f32::consts::FRAC_PI_2;
+//! use liealg::prelude::*;
+//! use liealg::Vec6;
+//! let vec = Vec6::new([0., 0., 1.], [0., -1., 0.]) * FRAC_PI_2;
+//! println!("vec: {}", vec);
+//! let se3 = vec.hat();
+//! println!("se3: {}", se3);
+//! let rigid = se3.exp();
+//! println!("rigid: {:.2}", rigid);
+//! let se3_ = rigid.log();
+//! let vec_ = se3_.vee();
+//! println!("vec_: {}", vec_);
+//! ```
+//!
 
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
 #![no_std]
 
 mod point;
-mod rigid;
-mod rot;
+pub mod rigid;
+pub mod rot;
 mod utils;
 
 use core::fmt::Debug;
@@ -34,13 +114,6 @@ pub mod prelude {
 pub trait Real: NumReal + Debug + NumAssignOps + FloatConst + 'static {}
 
 impl<T> Real for T where T: NumReal + Debug + NumAssignOps + FloatConst + 'static {}
-
-#[test]
-fn trait_test() {
-    fn a<T: Real>(_: T) {}
-    a(1f64);
-    a(1f32);
-}
 
 /// lie algebra vector representation
 pub trait Vector {

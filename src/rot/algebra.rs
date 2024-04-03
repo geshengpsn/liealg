@@ -1,4 +1,4 @@
-use core::ops::Mul;
+use core::{fmt::Display, ops::Mul};
 
 use super::SO3;
 use crate::{
@@ -8,40 +8,75 @@ use crate::{
 use nalgebra::{Matrix3, Vector3};
 
 /// so3 group
+/// ```ignore
+/// so3 = [
+///    0 -z  y
+///    z  0 -x
+///   -y  x  0
+/// ]
+/// ```
 #[allow(non_camel_case_types)]
 #[derive(Debug)]
 pub struct so3<T> {
-    pub(crate) vector: Vector3<T>,
+    pub(crate) val: Vector3<T>,
+}
+
+impl<T> Display for so3<T>
+where
+    T: Display + Real,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        hat(&self.val).fmt(f)
+    }
+}
+
+impl<T> so3<T>
+where
+    T: Real,
+{
+    /// Create a new so3 group element
+    /// ```ignore
+    /// so3 = [
+    ///    0 -z  y
+    ///    z  0 -x
+    ///   -y  x  0
+    /// ]
+    /// ```
+    pub fn new(x: T, y: T, z: T) -> Self {
+        Self {
+            val: Vector3::new(x, y, z),
+        }
+    }
 }
 
 impl<T> Mul<T> for so3<T>
 where
-    T: Copy + Real,
+    T: Real,
 {
     type Output = Self;
 
     fn mul(self, rhs: T) -> Self::Output {
         Self {
-            vector: self.vector * rhs,
+            val: self.val * rhs,
         }
     }
 }
 
 impl<T> Algebra for so3<T>
 where
-    T: Real + Copy,
+    T: Real,
 {
     type Group = SO3<T>;
 
     type Vector = Vec3<T>;
 
     fn exp(&self) -> Self::Group {
-        if approx_zero(length(&self.vector)) {
+        if approx_zero(length(&self.val)) {
             SO3 {
                 val: Matrix3::identity(),
             }
         } else {
-            let (w, angle) = axis_angle(&self.vector);
+            let (w, angle) = axis_angle(&self.val);
             let w_so3 = hat(&w);
             SO3 {
                 val: Matrix3::identity()
@@ -52,9 +87,7 @@ where
     }
 
     fn vee(&self) -> Self::Vector {
-        Vec3 {
-            vector: self.vector,
-        }
+        Vec3 { val: self.val }
     }
 }
 
@@ -67,7 +100,7 @@ mod test {
     #[test]
     fn so3_exp() {
         let so3 = so3 {
-            vector: Vector3::new(0., 0., FRAC_PI_2),
+            val: Vector3::new(0., 0., FRAC_PI_2),
         };
         let rot_mat = so3.exp();
         assert_relative_eq!(
@@ -79,9 +112,9 @@ mod test {
     #[test]
     fn so3_vee() {
         let so3 = so3 {
-            vector: Vector3::new(0., 0., FRAC_PI_2),
+            val: Vector3::new(0., 0., FRAC_PI_2),
         };
         let v = so3.vee();
-        assert_relative_eq!(v.vector, Vector3::new(0., 0., FRAC_PI_2));
+        assert_relative_eq!(v.val, Vector3::new(0., 0., FRAC_PI_2));
     }
 }

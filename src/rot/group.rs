@@ -1,3 +1,5 @@
+use core::fmt::Display;
+
 use nalgebra::{Matrix3, Vector3};
 
 use crate::{point::Point, utils::approx_zero, Group, Real};
@@ -5,14 +7,71 @@ use crate::{point::Point, utils::approx_zero, Group, Real};
 use super::{so3, AdjSO3};
 
 /// SO3 group (rotation matrix), rotation in 3D space
+/// ```ignore
+/// SO3 = [
+///   r11 r12 r13
+///   r21 r22 r23
+///   r31 r32 r33
+/// ]
 #[derive(Debug)]
 pub struct SO3<T> {
     pub(crate) val: Matrix3<T>,
 }
 
+impl<T> Display for SO3<T>
+where
+    T: Display + Real,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.val.fmt(f)
+    }
+}
+
+impl<T> SO3<T>
+where
+    T: Real,
+{
+    /// Create a new SO3 from a slice without checking the contents
+    ///
+    /// # Safety
+    /// use other metheds instead if you are not sure about the contents of the slice is a valid rotation matrix
+    pub fn new_unchecked(val: &[T]) -> Self {
+        Self {
+            val: Matrix3::from_column_slice(val),
+        }
+    }
+
+    /// Create a new SO3 from euler angles
+    /// input are radians
+    ///
+    /// ## Example
+    /// ```rust
+    /// use liealg::rot::SO3;
+    /// let rot = SO3::from_euler_angles(std::f64::consts::PI/4.0, 0., 0.);
+    /// ```
+    pub fn from_euler_angles(roll: T, pitch: T, yaw: T) -> Self {
+        let (sr, cr) = roll.sin_cos();
+        let (sp, cp) = pitch.sin_cos();
+        let (sy, cy) = yaw.sin_cos();
+
+        let val = Matrix3::new(
+            cy * cp,
+            cy * sp * sr - sy * cr,
+            cy * sp * cr + sy * sr,
+            sy * cp,
+            sy * sp * sr + cy * cr,
+            sy * sp * cr - cy * sr,
+            -sp,
+            cp * sr,
+            cp * cr,
+        );
+        Self { val }
+    }
+}
+
 impl<T> Group for SO3<T>
 where
-    T: Real + Copy,
+    T: Real,
 {
     type Algebra = so3<T>;
 
@@ -23,7 +82,7 @@ where
         let cos = (rot.trace() - one) / two;
         if cos >= one {
             so3 {
-                vector: Vector3::zeros(),
+                val: Vector3::zeros(),
             }
         } else if cos <= -one {
             let res;
@@ -37,14 +96,12 @@ where
                 res = Vector3::from_column_slice(&[rot[(0, 0)], rot[(1, 0)], one + rot[(2, 0)]])
                     / (two * (one + rot[(0, 0)])).sqrt();
             }
-            so3 {
-                vector: res * T::PI(),
-            }
+            so3 { val: res * T::PI() }
         } else {
             let theta = cos.acos();
             let a = (rot - rot.transpose()) * (theta / two / theta.sin());
             so3 {
-                vector: Vector3::new(a[(2, 1)], a[(0, 2)], a[(1, 0)]),
+                val: Vector3::new(a[(2, 1)], a[(0, 2)], a[(1, 0)]),
             }
         }
     }
@@ -84,6 +141,17 @@ mod test {
     use crate::{rot::Vec3, Vector};
 
     use super::*;
+    #[test]
+    fn test_new() {
+        let roll = FRAC_PI_2;
+        let rot = SO3::<f64>::from_euler_angles(roll, 0., 0.);
+        #[rustfmt::skip]
+        assert_relative_eq!(rot.val, &Matrix3::new(
+            1., 0., 0.,
+            0., 0., -1.,
+            0., 1., 0.
+        ));
+    }
 
     #[test]
     fn test_log() {
@@ -92,9 +160,9 @@ mod test {
         };
         let so3 = rot.log();
         let v = Vec3 {
-            vector: Vector3::new(0., 0., FRAC_PI_2),
+            val: Vector3::new(0., 0., FRAC_PI_2),
         };
-        assert_relative_eq!(v.hat().vector, so3.vector);
+        assert_relative_eq!(v.hat().val, so3.val);
     }
 
     #[test]
