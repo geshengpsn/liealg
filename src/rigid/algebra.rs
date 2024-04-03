@@ -11,7 +11,7 @@ use crate::{
 use super::{Vec6, SE3};
 
 /// se3 group
-/// ```
+/// ```ignore
 /// se3 = [
 ///  0 -wz wy x
 ///  wz 0 -wx y

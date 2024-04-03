@@ -8,7 +8,7 @@ use crate::{
 use nalgebra::{Matrix3, Vector3};
 
 /// so3 group
-/// ```
+/// ```ignore
 /// so3 = [
 ///    0 -z  y
 ///    z  0 -x
@@ -26,7 +26,7 @@ where
     T: Real,
 {
     /// Create a new so3 group element
-    /// ```
+    /// ```ignore
     /// so3 = [
     ///    0 -z  y
     ///    z  0 -x

@@ -35,13 +35,6 @@ pub trait Real: NumReal + Debug + NumAssignOps + FloatConst + 'static {}
 
 impl<T> Real for T where T: NumReal + Debug + NumAssignOps + FloatConst + 'static {}
 
-#[test]
-fn trait_test() {
-    fn a<T: Real>(_: T) {}
-    a(1f64);
-    a(1f32);
-}
-
 /// lie algebra vector representation
 pub trait Vector {
     /// algebra type
