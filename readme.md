@@ -44,7 +44,7 @@ and SO3 and SE3 can multiply matrices, take inverse and 3D point.
 
 ```rust
 use liealg::prelude::*;
-
+use liealg::{Vec3, Point};
 // construct Vec3
 let v = Vec3::new(0., 0., 1.) * FRAC_PI_2;
 
@@ -68,7 +68,7 @@ let _ = rot.act(&point);
 ### SE3
 ```rust
 use liealg::prelude::*;
-
+use liealg::{Vec3, Point};
 // construct Vec6
 let v = Vec6::new([0., 0., 1], [0., -1., 0.]) * FRAC_PI_2;
 
