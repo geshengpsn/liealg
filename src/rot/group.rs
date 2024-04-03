@@ -1,4 +1,4 @@
-use nalgebra::{Matrix3, Rotation, Rotation3, Vector3};
+use nalgebra::{Matrix3, Vector3};
 
 use crate::{point::Point, utils::approx_zero, Group, Real};
 

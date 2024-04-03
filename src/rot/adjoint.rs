@@ -1,5 +1,4 @@
 use nalgebra::Matrix3;
-use nalgebra::Rotation3;
 
 use crate::Adjoint;
 use crate::Real;
