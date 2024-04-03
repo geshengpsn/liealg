@@ -10,8 +10,8 @@
 #![no_std]
 
 mod point;
-mod rigid;
-mod rot;
+pub mod rigid;
+pub mod rot;
 mod utils;
 
 use core::fmt::Debug;
