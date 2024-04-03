@@ -1,4 +1,4 @@
-use core::fmt::Debug;
+use core::fmt::{Debug, Display};
 
 use nalgebra::Matrix6;
 
@@ -18,6 +18,15 @@ use super::se3;
 #[derive(Debug)]
 pub struct AdjSE3<T> {
     pub(crate) val: Matrix6<T>,
+}
+
+impl<T> Display for AdjSE3<T>
+where
+    T: Real + Display,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+        core::fmt::Display::fmt(&self.val, f)
+    }
 }
 
 impl<T> AdjSE3<T>

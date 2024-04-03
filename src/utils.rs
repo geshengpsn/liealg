@@ -1,4 +1,4 @@
-use nalgebra::{Matrix3, Vector3};
+use nalgebra::{Matrix3, Matrix4, Vector3, Vector6};
 
 use crate::Real;
 
@@ -22,4 +22,14 @@ pub(crate) fn length<T: Real>(v: &Vector3<T>) -> T {
 pub(crate) fn hat<T: Real>(v: &Vector3<T>) -> Matrix3<T> {
     let zero = T::zero();
     Matrix3::new(zero, -v[2], v[1], v[2], zero, -v[0], -v[1], v[0], zero)
+}
+
+pub(crate) fn hat_se3<T: Real>(v: &Vector6<T>) -> Matrix4<T> {
+    let zero = T::zero();
+    Matrix4::new(
+        zero, -v[2], v[1], v[3],
+        v[2], zero, -v[0], v[4],
+        -v[1], v[0], zero, v[5],
+        zero, zero, zero, zero,
+    )
 }

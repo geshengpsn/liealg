@@ -1,6 +1,8 @@
+use core::fmt::{Display, Formatter};
+
 use nalgebra::Vector3;
 
-use crate::Vector;
+use crate::{Real, Vector};
 
 use super::so3;
 
@@ -10,7 +12,16 @@ use super::so3;
 /// ```
 #[derive(Debug)]
 pub struct Vec3<T> {
-    pub(crate) vector: Vector3<T>,
+    pub(crate) val: Vector3<T>,
+}
+
+impl<T> Display for Vec3<T>
+where
+    T: Real + Display,
+{
+    fn fmt(&self, f: &mut Formatter) -> core::fmt::Result {
+        self.val.fmt(f)
+    }
 }
 
 impl<T> Vec3<T>
@@ -21,7 +32,7 @@ impl<T> Vec3<T>
     /// ```
     pub fn new(x: T, y: T, z: T) -> Self {
         Self {
-            vector: Vector3::new(x, y, z),
+            val: Vector3::new(x, y, z),
         }
     }
 }
@@ -34,7 +45,7 @@ where
 
     fn hat(&self) -> Self::Algebra {
         so3 {
-            vector: self.vector,
+            val: self.val,
         }
     }
 }
@@ -49,9 +60,9 @@ mod test {
     #[test]
     fn vector_hat() {
         let v = Vec3 {
-            vector: Vector3::new(0., 0., FRAC_PI_2),
+            val: Vector3::new(0., 0., FRAC_PI_2),
         };
         let so3 = v.hat();
-        assert_relative_eq!(so3.vector, Vector3::new(0., 0., FRAC_PI_2));
+        assert_relative_eq!(so3.val, Vector3::new(0., 0., FRAC_PI_2));
     }
 }

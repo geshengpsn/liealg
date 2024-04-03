@@ -1,3 +1,5 @@
+use core::fmt::Display;
+
 use nalgebra::{Matrix3, Vector3};
 
 use crate::{point::Point, utils::approx_zero, Group, Real};
@@ -14,6 +16,15 @@ use super::{so3, AdjSO3};
 #[derive(Debug)]
 pub struct SO3<T> {
     pub(crate) val: Matrix3<T>,
+}
+
+impl<T> Display for SO3<T>
+where
+    T: Display + Real,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.val.fmt(f)
+    }
 }
 
 impl<T> SO3<T>
@@ -70,7 +81,7 @@ where
         let cos = (rot.trace() - one) / two;
         if cos >= one {
             so3 {
-                vector: Vector3::zeros(),
+                val: Vector3::zeros(),
             }
         } else if cos <= -one {
             let res;
@@ -85,13 +96,13 @@ where
                     / (two * (one + rot[(0, 0)])).sqrt();
             }
             so3 {
-                vector: res * T::PI(),
+                val: res * T::PI(),
             }
         } else {
             let theta = cos.acos();
             let a = (rot - rot.transpose()) * (theta / two / theta.sin());
             so3 {
-                vector: Vector3::new(a[(2, 1)], a[(0, 2)], a[(1, 0)]),
+                val: Vector3::new(a[(2, 1)], a[(0, 2)], a[(1, 0)]),
             }
         }
     }
@@ -150,9 +161,9 @@ mod test {
         };
         let so3 = rot.log();
         let v = Vec3 {
-            vector: Vector3::new(0., 0., FRAC_PI_2),
+            val: Vector3::new(0., 0., FRAC_PI_2),
         };
-        assert_relative_eq!(v.hat().vector, so3.vector);
+        assert_relative_eq!(v.hat().val, so3.val);
     }
 
     #[test]

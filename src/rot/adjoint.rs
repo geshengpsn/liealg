@@ -1,3 +1,5 @@
+use core::fmt::Display;
+
 use nalgebra::Matrix3;
 
 use crate::Adjoint;
@@ -13,6 +15,15 @@ use super::Vec3;
 #[derive(Debug)]
 pub struct AdjSO3<T> {
     pub(crate) val: Matrix3<T>,
+}
+
+impl<T> Display for AdjSO3<T>
+where
+    T: Display + Real,
+{
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        self.val.fmt(f)
+    }
 }
 
 impl<T> AdjSO3<T> 
@@ -35,7 +46,7 @@ where
 
     fn act(&self, other: &Self::Algebra) -> Self::Algebra {
         Vec3 {
-            vector: self.val * other.vector,
+            val: self.val * other.val,
         }
         .hat()
     }
@@ -53,7 +64,7 @@ mod test {
             val: Matrix3::identity(),
         };
         let _ = adj.act(&so3 {
-            vector: Vector3::new(1., 2., 3.),
+            val: Vector3::new(1., 2., 3.),
         });
     }
 }
