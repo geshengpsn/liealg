@@ -22,34 +22,51 @@
 //! |SE3|se3|Vector6|
 //!
 //! ## Usage
+//! add liealg to your dependencies
 //! ```toml
 //! [dependencies]
 //! liealg = "0.1"
 //! ```
-//!
+//! 
 //! import prelude module
 //! ```rust
 //! use liealg::prelude::*;
 //! ```
-//!
+//!  
 //! ## Example
-//!
 //! ### Rotation
 //! ```rust
+//! use std::f32::consts::FRAC_PI_2;
 //! use liealg::prelude::*;
-//! use liealg::{se3, Vec3};
+//! use liealg::Vec3;
+//! let vec = Vec3::new(0., 0., FRAC_PI_2);
+//! println!("vec: {}", vec);
+//! let so3 = vec.hat();
+//! println!("so3: {}", so3);
+//! let rot = so3.exp();
+//! println!("rot: {:.2}", rot);
+//! let so3_ = rot.log();
+//! let vec_ = so3_.vee();
+//! println!("vec_: {}", vec_);
 //! ```
+//! 
+//! ### Rigid body motion
 //!
 //! ```rust
+//! use std::f32::consts::FRAC_PI_2;
 //! use liealg::prelude::*;
-//! use liealg::{se3, Vec6};
-//! let r = [0.0, 0.0, 1.0];
-//! let v = [1.0, 0.0, 0.0];
-//! let vec = Vec6::new(r, v).hat();
-//! let m1 = vec.exp();
-//! println!("{:?}", m1);
+//! use liealg::Vec6;
+//! let vec = Vec6::new([0., 0., 1.], [0., -1., 0.]) * FRAC_PI_2;
+//! println!("vec: {}", vec);
+//! let se3 = vec.hat();
+//! println!("se3: {}", se3);
+//! let rigid = se3.exp();
+//! println!("rigid: {:.2}", rigid);
+//! let se3_ = rigid.log();
+//! let vec_ = se3_.vee();
+//! println!("vec_: {}", vec_);
 //! ```
-//!
+//! 
 
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
