@@ -8,15 +8,41 @@ use crate::{
 use nalgebra::{Matrix3, Vector3};
 
 /// so3 group
+/// ```
+/// so3 = [
+///    0 -z  y
+///    z  0 -x
+///   -y  x  0
+/// ]
+/// ```
 #[allow(non_camel_case_types)]
 #[derive(Debug)]
 pub struct so3<T> {
     pub(crate) vector: Vector3<T>,
 }
 
+impl<T> so3<T>
+where
+    T: Real,
+{
+    /// Create a new so3 group element
+    /// ```
+    /// so3 = [
+    ///    0 -z  y
+    ///    z  0 -x
+    ///   -y  x  0
+    /// ]
+    /// ```
+    pub fn new(x: T, y: T, z: T) -> Self {
+        Self {
+            vector: Vector3::new(x, y, z),
+        }
+    }
+}
+
 impl<T> Mul<T> for so3<T>
 where
-    T: Copy + Real,
+    T: Real,
 {
     type Output = Self;
 
@@ -29,7 +55,7 @@ where
 
 impl<T> Algebra for so3<T>
 where
-    T: Real + Copy,
+    T: Real,
 {
     type Group = SO3<T>;
 

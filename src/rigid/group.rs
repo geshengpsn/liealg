@@ -8,9 +8,32 @@ use crate::{
 use super::{se3, AdjSE3};
 
 /// SE3 group, rotation and translation in 3D space
+///
+/// SE3 is a 4x4 matrix
+/// ```
+/// SE3 = [
+///  R t
+///  0 1
+/// ]
 #[derive(Debug)]
 pub struct SE3<T> {
     pub(crate) val: Matrix4<T>,
+}
+
+impl<T> SE3<T>
+where
+    T: Real,
+{
+    /// Create a new SE3 from a SO3 and translation
+    pub fn new(rot: &SO3<T>, p: [T; 3]) -> Self {
+        Self::from_rp(&rot.val, &Vector3::from(p))
+    }
+
+    /// create SO3 and translation from SE3
+    pub fn rot_trans(&self) -> (SO3<T>, [T; 3]) {
+        let (r, p) = self.rp();
+        (SO3 { val: r }, p.into())
+    }
 }
 
 impl<T> SE3<T>
@@ -33,7 +56,7 @@ where
 
 impl<T> Group for SE3<T>
 where
-    T: Copy + Real,
+    T: Real,
 {
     type Algebra = se3<T>;
 

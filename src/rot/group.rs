@@ -1,18 +1,65 @@
-use nalgebra::{Matrix3, Vector3};
+use nalgebra::{Matrix3, Rotation, Rotation3, Vector3};
 
 use crate::{point::Point, utils::approx_zero, Group, Real};
 
 use super::{so3, AdjSO3};
 
 /// SO3 group (rotation matrix), rotation in 3D space
+/// ```
+/// SO3 = [
+///   r11 r12 r13
+///   r21 r22 r23
+///   r31 r32 r33
+/// ]
 #[derive(Debug)]
 pub struct SO3<T> {
     pub(crate) val: Matrix3<T>,
 }
 
+impl<T> SO3<T>
+where
+    T: Real,
+{
+
+    /// Create a new SO3 from a slice without checking the contents
+    /// 
+    /// # Safety
+    /// use other metheds instead if you are not sure about the contents of the slice is a valid rotation matrix
+    pub fn new_unchecked(val: &[T]) -> Self {
+        Self { val: Matrix3::from_column_slice(val) }
+    }
+
+    /// Create a new SO3 from euler angles
+    /// input are radians
+    /// 
+    /// ## Example
+    /// ```rust
+    /// use lie::rot::SO3;
+    /// let rot = SO3::from_euler_angles(f64::consts::PI/4.0, 0., 0.);
+    /// ```
+    pub fn from_euler_angles(roll: T, pitch: T, yaw: T) -> Self {
+        let (sr, cr) = roll.sin_cos();
+        let (sp, cp) = pitch.sin_cos();
+        let (sy, cy) = yaw.sin_cos();
+        
+        let val = Matrix3::new(
+            cy * cp,
+            cy * sp * sr - sy * cr,
+            cy * sp * cr + sy * sr,
+            sy * cp,
+            sy * sp * sr + cy * cr,
+            sy * sp * cr - cy * sr,
+            -sp,
+            cp * sr,
+            cp * cr,
+        );
+        Self { val }
+    }
+}
+
 impl<T> Group for SO3<T>
 where
-    T: Real + Copy,
+    T: Real,
 {
     type Algebra = so3<T>;
 
@@ -84,6 +131,17 @@ mod test {
     use crate::{rot::Vec3, Vector};
 
     use super::*;
+    #[test]
+    fn test_new() {
+        let roll = FRAC_PI_2;
+        let rot = SO3::<f64>::from_euler_angles(roll, 0., 0.);
+        #[rustfmt::skip]
+        assert_relative_eq!(rot.val, &Matrix3::new(
+            1., 0., 0.,
+            0., 0., -1.,
+            0., 1., 0.
+        ));
+    }
 
     #[test]
     fn test_log() {

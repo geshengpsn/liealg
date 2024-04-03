@@ -7,9 +7,30 @@ use crate::{Adjoint, Real};
 use super::se3;
 
 /// Adjoint of SE3
+/// 
+/// AdjSE3 is a 6x6 matrix
+/// ```
+/// AdjSE3 = [
+///   R 0
+///  tR R
+/// ]
+/// ```
 #[derive(Debug)]
 pub struct AdjSE3<T> {
     pub(crate) val: Matrix6<T>,
+}
+
+impl<T> AdjSE3<T>
+where
+    T: Real,
+{
+    /// Create a new AdjSE3 from a slice without checking the contents
+    /// 
+    /// # Safety
+    /// use ```SE3::adjoint()``` instead if you are not sure the contents of the slice is valid
+    pub fn new_unchecked(val: &[T]) -> Self {
+        Self { val: Matrix6::from_column_slice(val) }
+    }
 }
 
 impl<T> Adjoint for AdjSE3<T>
