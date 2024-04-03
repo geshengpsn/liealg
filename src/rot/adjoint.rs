@@ -10,7 +10,7 @@ use super::so3;
 use super::Vec3;
 
 /// Adjoint of SO3
-/// 
+///
 /// AdjSO3 = SO3
 #[derive(Debug)]
 pub struct AdjSO3<T> {
@@ -26,15 +26,18 @@ where
     }
 }
 
-impl<T> AdjSO3<T> 
-where T: Real
-{   
+impl<T> AdjSO3<T>
+where
+    T: Real,
+{
     /// Create a new AdjSO3 from a slice without checking the contents
-    /// 
+    ///
     /// # Safety
     /// use ```AdjSO3::new()``` instead if you are not sure about the contents of the slice is a valid adjoint matrix
     pub fn new_unchecked(val: &[T]) -> Self {
-        Self { val: Matrix3::from_column_slice(val) }
+        Self {
+            val: Matrix3::from_column_slice(val),
+        }
     }
 }
 

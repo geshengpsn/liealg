@@ -1,45 +1,45 @@
 //! # Lie group and Lie algebra in rust
-//! 
-//! liealg is a library for computing Lie algebra and Lie group in 3D space(SO3 and SE3). 
-//! It is mainly used in robot kinematics and other related area. 
-//! If you want to do some general Lie group and Lie algebra calculations, 
+//!
+//! liealg is a library for computing Lie algebra and Lie group in 3D space(SO3 and SE3).
+//! It is mainly used in robot kinematics and other related area.
+//! If you want to do some general Lie group and Lie algebra calculations,
 //! it is better not to use this library.
-//! 
+//!
 //! ## Traits
 //! liealg provides a set of mathematical entity traits for Lie group and Lie algebra.
 //! these are [Adjoint], [Algebra], [Group], [Vector].
 //! liealg provides a standard implementation of these traits, but users can also implement their own types.
 //!
 //! liealg also provides a trait [Real] for using more types of real numbers, except f32, f64, it can support most real number types, such as rational and decimal, users can also define their own real number types.
-//! 
+//!
 //! ## Implementations
-//! 
+//!
 //! liealg provides two implementations of Lie group and Lie algebra, SO3 and SE3, which correspond to rotation and rigid body motion in 3D space.
-//! 
+//!
 //! |group|algebra|vector|
 //! |-|-|-|
 //! |SO3|so3|Vector3|
 //! |SE3|se3|Vector6|
-//! 
+//!
 //! ## Usage
 //! ```toml
 //! [dependencies]
 //! liealg = "0.1"
 //! ```
-//! 
+//!
 //! import prelude module
 //! ```rust
 //! use liealg::prelude::*;
 //! ```
-//! 
+//!
 //! ## Example
-//! 
+//!
 //! ### Rotation
 //! ```rust
 //! use liealg::prelude::*;
 //! use liealg::{se3, Vec3};
 //! ```
-//! 
+//!
 //! ```rust
 //! use liealg::prelude::*;
 //! use liealg::{se3, Vec6};
@@ -49,7 +49,7 @@
 //! let m1 = vec.exp();
 //! println!("{:?}", m1);
 //! ```
-//! 
+//!
 
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]

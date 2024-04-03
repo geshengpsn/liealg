@@ -1,4 +1,7 @@
-use core::{fmt::{self, Display, Formatter}, ops::Mul};
+use core::{
+    fmt::{self, Display, Formatter},
+    ops::Mul,
+};
 
 use nalgebra::{Vector3, Vector6};
 

@@ -1,11 +1,11 @@
 //! Rigid body transformations in 3D space
 
-mod algebra;
 mod adjoint;
+mod algebra;
 mod group;
 mod vector;
 
-pub use algebra::se3;
 pub use adjoint::AdjSE3;
+pub use algebra::se3;
 pub use group::SE3;
 pub use vector::Vec6;

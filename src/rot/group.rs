@@ -31,18 +31,19 @@ impl<T> SO3<T>
 where
     T: Real,
 {
-
     /// Create a new SO3 from a slice without checking the contents
-    /// 
+    ///
     /// # Safety
     /// use other metheds instead if you are not sure about the contents of the slice is a valid rotation matrix
     pub fn new_unchecked(val: &[T]) -> Self {
-        Self { val: Matrix3::from_column_slice(val) }
+        Self {
+            val: Matrix3::from_column_slice(val),
+        }
     }
 
     /// Create a new SO3 from euler angles
     /// input are radians
-    /// 
+    ///
     /// ## Example
     /// ```rust
     /// use liealg::rot::SO3;
@@ -52,7 +53,7 @@ where
         let (sr, cr) = roll.sin_cos();
         let (sp, cp) = pitch.sin_cos();
         let (sy, cy) = yaw.sin_cos();
-        
+
         let val = Matrix3::new(
             cy * cp,
             cy * sp * sr - sy * cr,
@@ -95,9 +96,7 @@ where
                 res = Vector3::from_column_slice(&[rot[(0, 0)], rot[(1, 0)], one + rot[(2, 0)]])
                     / (two * (one + rot[(0, 0)])).sqrt();
             }
-            so3 {
-                val: res * T::PI(),
-            }
+            so3 { val: res * T::PI() }
         } else {
             let theta = cos.acos();
             let a = (rot - rot.transpose()) * (theta / two / theta.sin());

@@ -7,7 +7,7 @@ use crate::{Adjoint, Real};
 use super::se3;
 
 /// Adjoint of SE3
-/// 
+///
 /// AdjSE3 is a 6x6 matrix
 /// ```ignore
 /// AdjSE3 = [
@@ -34,11 +34,13 @@ where
     T: Real,
 {
     /// Create a new AdjSE3 from a slice without checking the contents
-    /// 
+    ///
     /// # Safety
     /// use ```SE3::adjoint()``` instead if you are not sure the contents of the slice is valid
     pub fn new_unchecked(val: &[T]) -> Self {
-        Self { val: Matrix6::from_column_slice(val) }
+        Self {
+            val: Matrix6::from_column_slice(val),
+        }
     }
 }
 

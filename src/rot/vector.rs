@@ -24,8 +24,7 @@ where
     }
 }
 
-impl<T> Vec3<T>
-{
+impl<T> Vec3<T> {
     /// Create a new Vec3
     /// ```ignore
     /// vec3 = [x, y, z]
@@ -44,9 +43,7 @@ where
     type Algebra = so3<T>;
 
     fn hat(&self) -> Self::Algebra {
-        so3 {
-            val: self.val,
-        }
+        so3 { val: self.val }
     }
 }
 

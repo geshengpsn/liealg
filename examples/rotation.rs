@@ -1,6 +1,6 @@
-use std::f64::consts::FRAC_PI_2;
 use liealg::prelude::*;
 use liealg::Vec3;
+use std::f64::consts::FRAC_PI_2;
 
 fn main() {
     let vec = Vec3::new(FRAC_PI_2, 0., 0.);

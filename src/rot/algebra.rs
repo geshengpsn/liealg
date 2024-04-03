@@ -28,7 +28,7 @@ where
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         hat(&self.val).fmt(f)
     }
-} 
+}
 
 impl<T> so3<T>
 where
@@ -87,9 +87,7 @@ where
     }
 
     fn vee(&self) -> Self::Vector {
-        Vec3 {
-            val: self.val,
-        }
+        Vec3 { val: self.val }
     }
 }
 

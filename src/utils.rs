@@ -27,9 +27,7 @@ pub(crate) fn hat<T: Real>(v: &Vector3<T>) -> Matrix3<T> {
 pub(crate) fn hat_se3<T: Real>(v: &Vector6<T>) -> Matrix4<T> {
     let zero = T::zero();
     Matrix4::new(
-        zero, -v[2], v[1], v[3],
-        v[2], zero, -v[0], v[4],
-        -v[1], v[0], zero, v[5],
-        zero, zero, zero, zero,
+        zero, -v[2], v[1], v[3], v[2], zero, -v[0], v[4], -v[1], v[0], zero, v[5], zero, zero,
+        zero, zero,
     )
 }
