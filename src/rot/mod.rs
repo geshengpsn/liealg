@@ -1,3 +1,5 @@
+//! Rotation in 3D space
+
 mod algebra;
 mod adjoint;
 mod group;
