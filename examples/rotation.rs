@@ -9,6 +9,8 @@ fn main() {
     println!("so3: {:.2}", so3);
     let rot = so3.exp();
     println!("rot: {:.2}", rot);
+    let adj = rot.adjoint();
+    println!("adj: {:.2}", adj);
     let so3_ = rot.log();
     let vec_ = so3_.vee();
     println!("vec_: {}", vec_);
