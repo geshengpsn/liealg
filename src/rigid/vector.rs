@@ -47,6 +47,17 @@ where
             val: Vector6::new(r[0], r[1], r[2], p[0], p[1], p[2]),
         }
     }
+    /// get the array representation of the vector
+    pub fn as_array(&self) -> [T; 6] {
+        [
+            self.val[0],
+            self.val[1],
+            self.val[2],
+            self.val[3],
+            self.val[4],
+            self.val[5],
+        ]
+    }
 
     /// get rotation part of the vector
     pub fn r(&self) -> [T; 3] {
