@@ -31,10 +31,23 @@ impl<T> Mul<T> for Vec3<T>
 where
     T: Real,
 {
-    type Output = Self;
+    type Output = Vec3<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
-        Self {
+        Vec3 {
+            val: self.val * rhs,
+        }
+    }
+}
+
+impl<T> Mul<T> for &Vec3<T>
+where
+    T: Real,
+{
+    type Output = Vec3<T>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Vec3 {
             val: self.val * rhs,
         }
     }

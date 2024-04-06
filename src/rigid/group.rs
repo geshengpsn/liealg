@@ -1,4 +1,4 @@
-use core::fmt::Display;
+use core::{fmt::Display, ops::Mul};
 
 use nalgebra::{Matrix3, Matrix4, Matrix6, Vector3, Vector4, Vector6};
 
@@ -134,6 +134,78 @@ where
         Point {
             val: Vector3::new(p4.x, p4.y, p4.z),
         }
+    }
+}
+
+impl<T: Real> Mul<T> for SE3<T> {
+    type Output = SE3<T>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        SE3 {
+            val: self.val * rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<T> for &SE3<T> {
+    type Output = SE3<T>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        SE3 {
+            val: self.val * rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<&T> for SE3<T> {
+    type Output = SE3<T>;
+
+    fn mul(self, rhs: &T) -> Self::Output {
+        SE3 {
+            val: self.val * *rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<&T> for &SE3<T> {
+    type Output = SE3<T>;
+
+    fn mul(self, rhs: &T) -> Self::Output {
+        SE3 {
+            val: self.val * *rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<Point<T>> for SE3<T> {
+    type Output = Point<T>;
+
+    fn mul(self, rhs: Point<T>) -> Self::Output {
+        self.act(&rhs)
+    }
+}
+
+impl<T: Real> Mul<Point<T>> for &SE3<T> {
+    type Output = Point<T>;
+
+    fn mul(self, rhs: Point<T>) -> Self::Output {
+        self.act(&rhs)
+    }
+}
+
+impl<T: Real> Mul<&Point<T>> for SE3<T> {
+    type Output = Point<T>;
+
+    fn mul(self, rhs: &Point<T>) -> Self::Output {
+        self.act(rhs)
+    }
+}
+
+impl<T: Real> Mul<&Point<T>> for &SE3<T> {
+    type Output = Point<T>;
+
+    fn mul(self, rhs: &Point<T>) -> Self::Output {
+        self.act(rhs)
     }
 }
 

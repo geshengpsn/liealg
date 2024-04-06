@@ -37,6 +37,19 @@ where
     }
 }
 
+impl<T> Mul<T> for &Vec6<T>
+where
+    T: Real,
+{
+    type Output = Vec6<T>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Vec6 {
+            val: self.val * rhs,
+        }
+    }
+}
+
 impl<T> Vec6<T>
 where
     T: Copy,
