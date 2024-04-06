@@ -87,8 +87,9 @@
 
 #![deny(missing_docs)]
 #![deny(missing_debug_implementations)]
-#![no_std]
+#![cfg_attr(not(test), no_std)]
 
+mod impl_approx;
 mod impl_clone;
 mod point;
 pub mod rigid;
