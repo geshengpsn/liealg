@@ -27,3 +27,20 @@ impl<T> Point<T> {
         }
     }
 }
+
+impl<T: Copy> Point<T> {
+    /// get the x coordinate
+    pub fn x(&self) -> T {
+        self.val[0]
+    }
+
+    /// get the y coordinate
+    pub fn y(&self) -> T {
+        self.val[1]
+    }
+
+    /// get the z coordinate
+    pub fn z(&self) -> T {
+        self.val[2]
+    }
+}
