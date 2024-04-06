@@ -93,6 +93,7 @@ mod point;
 pub mod rigid;
 pub mod rot;
 mod utils;
+mod impl_clone;
 
 use core::fmt::Debug;
 
