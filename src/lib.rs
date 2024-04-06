@@ -89,11 +89,11 @@
 #![deny(missing_debug_implementations)]
 #![no_std]
 
+mod impl_clone;
 mod point;
 pub mod rigid;
 pub mod rot;
 mod utils;
-mod impl_clone;
 
 use core::fmt::Debug;
 

@@ -34,7 +34,7 @@ fn clone_test() {
     let adj = mat.adjoint();
     let _ = adj.clone();
 
-    let v = Vec6::new([1.,2.,3.], [4.,5.,6.]);
+    let v = Vec6::new([1., 2., 3.], [4., 5., 6.]);
     let _ = v.clone();
     let se3 = v.hat();
     let _ = se3.clone();
