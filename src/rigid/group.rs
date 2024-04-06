@@ -40,6 +40,13 @@ where
         Self::from_rp(&rot.val, &Vector3::from(p))
     }
 
+    /// Create a new identity SE3 group
+    pub fn identity() -> Self {
+        Self {
+            val: Matrix4::identity(),
+        }
+    }
+
     /// create SO3 and translation from SE3
     pub fn rot_trans(&self) -> (SO3<T>, [T; 3]) {
         let (r, p) = self.rp();
