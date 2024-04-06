@@ -41,6 +41,13 @@ where
         }
     }
 
+    /// Create a new identity SO3 group
+    pub fn identity() -> Self {
+        Self {
+            val: Matrix3::identity(),
+        }
+    }
+
     /// Create a new SO3 from euler angles
     /// input are radians
     ///
