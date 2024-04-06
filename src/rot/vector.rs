@@ -52,6 +52,13 @@ impl<T> Vec3<T> {
     }
 }
 
+impl<T: Copy> Vec3<T> {
+    /// get the vector
+    pub fn get(&self) -> [T; 3] {
+        [self.val[0], self.val[1], self.val[2]]
+    }
+}
+
 impl<T> Vector for Vec3<T>
 where
     T: Copy,
