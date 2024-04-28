@@ -25,7 +25,7 @@ checksum = "a2ef034f05691a48569bd920a96c81b9d91bbad1ab5ac7c4616c1f6ef36cb79f"
 
 [[package]]
 name = "liealg"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "approx",
  "nalgebra",
