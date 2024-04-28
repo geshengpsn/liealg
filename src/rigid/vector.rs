@@ -3,7 +3,7 @@ use core::{
     ops::Mul,
 };
 
-use nalgebra::{Vector3, Vector6};
+use nalgebra::Vector6;
 
 use crate::{Real, Vector};
 
@@ -37,6 +37,19 @@ where
     }
 }
 
+impl<T> Mul<T> for &Vec6<T>
+where
+    T: Real,
+{
+    type Output = Vec6<T>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Vec6 {
+            val: self.val * rhs,
+        }
+    }
+}
+
 impl<T> Vec6<T>
 where
     T: Copy,
@@ -47,13 +60,26 @@ where
             val: Vector6::new(r[0], r[1], r[2], p[0], p[1], p[2]),
         }
     }
-
-    pub(crate) fn r(&self) -> Vector3<T> {
-        Vector3::new(self.val[0], self.val[1], self.val[2])
+    /// get the array representation of the vector
+    pub fn as_array(&self) -> [T; 6] {
+        [
+            self.val[0],
+            self.val[1],
+            self.val[2],
+            self.val[3],
+            self.val[4],
+            self.val[5],
+        ]
     }
 
-    pub(crate) fn p(&self) -> Vector3<T> {
-        Vector3::new(self.val[3], self.val[4], self.val[5])
+    /// get rotation part of the vector
+    pub fn r(&self) -> [T; 3] {
+        [self.val[0], self.val[1], self.val[2]]
+    }
+
+    /// get translation part of the vector
+    pub fn p(&self) -> [T; 3] {
+        [self.val[3], self.val[4], self.val[5]]
     }
 }
 
@@ -85,7 +111,7 @@ mod test {
         let r = [1.0, 2.0, 3.0];
         let v = [4.0, 5.0, 6.0];
         let vec = Vec6::new(r, v);
-        assert_eq!(vec.r(), Vector3::new(1.0, 2.0, 3.0));
+        assert_eq!(vec.r(), [1.0, 2.0, 3.0]);
     }
 
     #[test]
@@ -93,7 +119,7 @@ mod test {
         let r = [1.0, 2.0, 3.0];
         let v = [4.0, 5.0, 6.0];
         let vec = Vec6::new(r, v);
-        assert_eq!(vec.p(), Vector3::new(4.0, 5.0, 6.0));
+        assert_eq!(vec.p(), [4.0, 5.0, 6.0]);
     }
 
     #[test]

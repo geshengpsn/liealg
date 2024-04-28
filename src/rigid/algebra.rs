@@ -1,6 +1,6 @@
 use core::{fmt::Display, ops::Mul};
 
-use nalgebra::{Matrix3, Matrix4, Vector6};
+use nalgebra::{Matrix3, Matrix4, Vector3, Vector6};
 
 use crate::{
     so3,
@@ -68,8 +68,8 @@ where
 
     fn exp(&self) -> Self::Group {
         let vec = self.vee();
-        let v = vec.p();
-        let w = vec.r();
+        let v = Vector3::from_column_slice(&vec.p());
+        let w = Vector3::from_column_slice(&vec.r());
         let (axis, theta) = axis_angle(&w);
         if approx_zero(theta) {
             let mut res = Matrix4::identity();

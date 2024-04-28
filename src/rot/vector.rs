@@ -31,10 +31,23 @@ impl<T> Mul<T> for Vec3<T>
 where
     T: Real,
 {
-    type Output = Self;
+    type Output = Vec3<T>;
 
     fn mul(self, rhs: T) -> Self::Output {
-        Self {
+        Vec3 {
+            val: self.val * rhs,
+        }
+    }
+}
+
+impl<T> Mul<T> for &Vec3<T>
+where
+    T: Real,
+{
+    type Output = Vec3<T>;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        Vec3 {
             val: self.val * rhs,
         }
     }
@@ -49,6 +62,13 @@ impl<T> Vec3<T> {
         Self {
             val: Vector3::new(x, y, z),
         }
+    }
+}
+
+impl<T: Copy> Vec3<T> {
+    /// get the array representation of the vector
+    pub fn as_array(&self) -> [T; 3] {
+        [self.val[0], self.val[1], self.val[2]]
     }
 }
 

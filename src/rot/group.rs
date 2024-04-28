@@ -1,4 +1,4 @@
-use core::fmt::Display;
+use core::{fmt::Display, ops::Mul};
 
 use nalgebra::{Matrix3, Vector3};
 
@@ -38,6 +38,13 @@ where
     pub fn new_unchecked(val: &[T]) -> Self {
         Self {
             val: Matrix3::from_column_slice(val),
+        }
+    }
+
+    /// Create a new identity SO3 group
+    pub fn identity() -> Self {
+        Self {
+            val: Matrix3::identity(),
         }
     }
 
@@ -129,6 +136,70 @@ where
         Self::Point {
             val: self.val * other.val,
         }
+    }
+}
+
+impl<T: Real> Mul<T> for SO3<T> {
+    type Output = SO3<T>;
+    fn mul(self, rhs: T) -> Self::Output {
+        SO3 {
+            val: self.val * rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<&T> for SO3<T> {
+    type Output = SO3<T>;
+    fn mul(self, rhs: &T) -> Self::Output {
+        SO3 {
+            val: self.val * *rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<T> for &SO3<T> {
+    type Output = SO3<T>;
+    fn mul(self, rhs: T) -> Self::Output {
+        SO3 {
+            val: self.val * rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<&T> for &SO3<T> {
+    type Output = SO3<T>;
+    fn mul(self, rhs: &T) -> Self::Output {
+        SO3 {
+            val: self.val * *rhs,
+        }
+    }
+}
+
+impl<T: Real> Mul<Point<T>> for SO3<T> {
+    type Output = Point<T>;
+    fn mul(self, rhs: Point<T>) -> Self::Output {
+        self.act(&rhs)
+    }
+}
+
+impl<T: Real> Mul<Point<T>> for &SO3<T> {
+    type Output = Point<T>;
+    fn mul(self, rhs: Point<T>) -> Self::Output {
+        self.act(&rhs)
+    }
+}
+
+impl<T: Real> Mul<&Point<T>> for SO3<T> {
+    type Output = Point<T>;
+    fn mul(self, rhs: &Point<T>) -> Self::Output {
+        self.act(rhs)
+    }
+}
+
+impl<T: Real> Mul<&Point<T>> for &SO3<T> {
+    type Output = Point<T>;
+    fn mul(self, rhs: &Point<T>) -> Self::Output {
+        self.act(rhs)
     }
 }
 
