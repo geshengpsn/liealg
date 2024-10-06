@@ -50,6 +50,32 @@ where
     }
 }
 
+impl<T> Mul<&T> for Vec6<T>
+where
+    T: Real,
+{
+    type Output = Vec6<T>;
+
+    fn mul(self, rhs: &T) -> Self::Output {
+        Vec6 {
+            val: self.val * *rhs,
+        }
+    }
+}
+
+impl<T> Mul<&T> for &Vec6<T>
+where
+    T: Real,
+{
+    type Output = Vec6<T>;
+
+    fn mul(self, rhs: &T) -> Self::Output {
+        Vec6 {
+            val: self.val * *rhs,
+        }
+    }
+}
+
 impl<T> Vec6<T>
 where
     T: Copy,
@@ -70,6 +96,10 @@ where
             self.val[4],
             self.val[5],
         ]
+    }
+    /// get the array representation of the vector
+    pub fn as_slice(&self) -> &[T] {
+        self.val.as_slice()
     }
 
     /// get rotation part of the vector
