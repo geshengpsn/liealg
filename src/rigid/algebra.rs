@@ -1,4 +1,4 @@
-use core::{fmt::Display, ops::Mul};
+use core::{fmt::Display, ops::{Add, Mul}};
 
 use nalgebra::{Matrix3, Matrix4, Vector3, Vector6};
 
@@ -75,6 +75,19 @@ where
     fn mul(self, rhs: &T) -> Self::Output {
         Self {
             val: self.val * *rhs,
+        }
+    }
+}
+
+impl<T> Add for se3<T>
+where
+    T: Real,
+{
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self {
+            val: self.val + rhs.val,
         }
     }
 }

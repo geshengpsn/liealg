@@ -48,6 +48,15 @@ where
         }
     }
 
+    /// Create a column-by-column slice
+    pub fn as_array(&self) -> [T; 9] {
+        let slice = self.val.as_slice();
+        [
+            slice[0], slice[1], slice[2], slice[3], slice[4], slice[5], slice[6], slice[7],
+            slice[8],
+        ]
+    }
+
     /// Create a new SO3 from euler angles
     /// input are radians
     ///
