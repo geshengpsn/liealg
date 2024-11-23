@@ -42,6 +42,13 @@ where
             val: Matrix6::from_column_slice(val),
         }
     }
+
+    /// transpose the adjoint
+    pub fn transpose(&self) -> Self {
+        Self {
+            val: self.val.transpose(),
+        }
+    }
 }
 
 impl<T> Adjoint for AdjSE3<T>
