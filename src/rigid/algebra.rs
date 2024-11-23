@@ -1,4 +1,7 @@
-use core::{fmt::Display, ops::{Add, Mul}};
+use core::{
+    fmt::Display,
+    ops::{Add, Mul},
+};
 
 use nalgebra::{Matrix3, Matrix4, Vector3, Vector6};
 
