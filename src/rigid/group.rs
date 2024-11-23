@@ -1,4 +1,7 @@
-use core::{fmt::Display, ops::Mul};
+use core::{
+    fmt::Display,
+    ops::{Mul, MulAssign},
+};
 
 use nalgebra::{Matrix3, Matrix4, Matrix6, Vector3, Vector4, Vector6};
 
@@ -206,6 +209,28 @@ impl<T: Real> Mul<&Point<T>> for &SE3<T> {
 
     fn mul(self, rhs: &Point<T>) -> Self::Output {
         self.act(rhs)
+    }
+}
+
+impl<T: Real> Mul<SE3<T>> for SE3<T> {
+    type Output = SE3<T>;
+
+    fn mul(self, rhs: SE3<T>) -> Self::Output {
+        self.mat_mul(&rhs)
+    }
+}
+
+impl<T: Real> Mul<&SE3<T>> for SE3<T> {
+    type Output = SE3<T>;
+
+    fn mul(self, rhs: &SE3<T>) -> Self::Output {
+        self.mat_mul(rhs)
+    }
+}
+
+impl<T: Real> MulAssign<SE3<T>> for SE3<T> {
+    fn mul_assign(&mut self, rhs: SE3<T>) {
+        *self = self.clone() * rhs;
     }
 }
 

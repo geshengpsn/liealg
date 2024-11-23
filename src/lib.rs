@@ -102,6 +102,7 @@ use num_traits::{real::Real as NumReal, FloatConst, NumAssignOps};
 pub use point::Point;
 pub use rigid::{se3, AdjSE3, Vec6, SE3};
 pub use rot::{so3, AdjSO3, Vec3, SO3};
+pub use utils::*;
 
 /// prelude module
 pub mod prelude {
@@ -139,6 +140,8 @@ pub trait Algebra {
 
     /// map algebra to vector
     fn vee(&self) -> Self::Vector;
+
+    // fn bracket(&self) -> Self::Algebra;
 }
 
 /// lie algebra trait

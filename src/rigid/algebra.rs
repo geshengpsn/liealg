@@ -1,4 +1,7 @@
-use core::{fmt::Display, ops::Mul};
+use core::{
+    fmt::Display,
+    ops::{Add, Mul},
+};
 
 use nalgebra::{Matrix3, Matrix4, Vector3, Vector6};
 
@@ -35,6 +38,13 @@ where
             val: Vector6::new(r[0], r[1], r[2], p[0], p[1], p[2]),
         }
     }
+
+    /// Create a new identity se3
+    pub fn identity() -> Self {
+        Self {
+            val: Vector6::zeros(),
+        }
+    }
 }
 
 impl<T> Display for se3<T>
@@ -55,6 +65,32 @@ where
     fn mul(self, rhs: T) -> Self::Output {
         Self {
             val: self.val * rhs,
+        }
+    }
+}
+
+impl<T> Mul<&T> for se3<T>
+where
+    T: Real,
+{
+    type Output = Self;
+
+    fn mul(self, rhs: &T) -> Self::Output {
+        Self {
+            val: self.val * *rhs,
+        }
+    }
+}
+
+impl<T> Add for se3<T>
+where
+    T: Real,
+{
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self {
+            val: self.val + rhs.val,
         }
     }
 }
