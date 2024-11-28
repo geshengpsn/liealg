@@ -1,6 +1,6 @@
 use core::{
     fmt::Display,
-    ops::{Add, Mul},
+    ops::{Add, Mul, Sub},
 };
 
 use nalgebra::{Matrix3, Matrix4, Vector3, Vector6};
@@ -91,6 +91,19 @@ where
     fn add(self, rhs: Self) -> Self::Output {
         Self {
             val: self.val + rhs.val,
+        }
+    }
+}
+
+impl<T> Sub for se3<T>
+where
+    T: Real,
+{
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            val: self.val - rhs.val,
         }
     }
 }
