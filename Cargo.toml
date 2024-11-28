@@ -1,6 +1,6 @@
 [package]
 name = "liealg"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 description = "lie group and lie algebra in rust"
 license = "MIT OR Apache-2.0"
