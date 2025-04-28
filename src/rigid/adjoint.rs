@@ -49,6 +49,11 @@ where
             val: self.val.transpose(),
         }
     }
+
+    /// as_slice
+    pub fn as_slice(&self) -> &[T] {
+        self.val.as_slice()
+    }
 }
 
 impl<T> Adjoint for AdjSE3<T>
