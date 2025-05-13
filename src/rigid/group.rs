@@ -34,6 +34,12 @@ where
     }
 }
 
+impl<T> AsRef<Matrix4<T>> for SE3<T> {
+    fn as_ref(&self) -> &Matrix4<T> {
+        &self.val
+    }
+}
+
 impl<T> SE3<T>
 where
     T: Real,

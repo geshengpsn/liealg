@@ -29,6 +29,12 @@ where
     }
 }
 
+impl<T> AsRef<Matrix6<T>> for AdjSE3<T> {
+    fn as_ref(&self) -> &Matrix6<T> {
+        &self.val
+    }
+}
+
 impl<T> AdjSE3<T>
 where
     T: Real,

@@ -15,6 +15,12 @@ pub struct Vec6<T> {
     pub(crate) val: Vector6<T>,
 }
 
+impl<T> AsRef<Vector6<T>> for Vec6<T> {
+    fn as_ref(&self) -> &Vector6<T> {
+        &self.val
+    }
+}
+
 impl<T> Display for Vec6<T>
 where
     T: Real + Display,
